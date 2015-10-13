@@ -1,0 +1,33 @@
+{
+  "name": "@nymdev/express-nymag-user",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Handles in-house authentication as middleware for express via a cookie",
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint && mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nymag/express-nymag-user.git"
+  },
+  "homepage": "https://github.com/nymag/express-nymag-user",
+  "keywords": [
+    "in-house",
+    "authentication",
+    "middleware",
+    "express",
+    "cookie"
+  ],
+  "author": "New York Magazine",
+  "license": "None",
+  "dependencies": {
+    "cookie-parser": "^1.4",
+    "express": "^4.13",
+    "lodash": "^3"
+  },
+  "engines": {
+    "node": "^4.0.0"
+  },
+  "engine-strict": true
+}
