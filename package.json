@@ -1,12 +1,8 @@
 {
   "name": "@nymdev/express-nymag-user",
-  "version": "0.0.1",
-  "private": true,
+  "version": "0.0.2",
   "description": "Handles in-house authentication as middleware for express via a cookie",
   "main": "index.js",
-  "scripts": {
-    "test": "eslint && mocha"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/nymag/express-nymag-user.git"

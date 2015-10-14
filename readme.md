@@ -9,16 +9,19 @@ NOTE: Use with care.  It's the same as user's volunteering their own username, a
 ## Usage
 
 ```js
-app.use(require('@nymdev/express-nymag-user')({
+const express = require('express'),
+  app = express(),
+  expressNYMagAuth = require('@nymdev/express-nymag-auth'),
+  authServer = 'http://auth.nymag.com:5000/login?redirect_to=';
 
-  //what domains to enable blocking for
-  blockDomains: ['qa.nymag.com', 'nymag.com', 'nymetro.com'],
-
-  //logic for blocking
+app.use(expressNYMagAuth({
+  blockDomains: ['nymag.com'],
+  redirectTo: function (originalUrl) {
+    return authServer + encodeURIComponent(originalUrl);
+  },
   isProtected: function (req) {
     return !!req.query.edit;
   }
-
 }));
 ```
 
