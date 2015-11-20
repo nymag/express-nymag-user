@@ -3,8 +3,17 @@
 const _ = require('lodash'),
   express = require('express'),
   cookieParser = require('cookie-parser'),
-  cookieName = 'user',
-  defaultBlockDomains = ['nymetro.com'];
+  cookieName = 'user';
+
+function getDefaultBlockDomains() {
+  const blockDomains = process.env.BLOCK_DOMAINS;
+
+  if (_.isString(blockDomains) && blockDomains.length) {
+    return _.map(blockDomains.split(','), _.trim);
+  } else {
+    return [];
+  }
+}
 
 /**
  * @param {string} target
@@ -19,11 +28,11 @@ function contains(target) {
 /**
  * @param {string} host
  * @param {object} options
- * @param {[string]} [options.blockDomains=defaultBlockDomains]
+ * @param {[string]} [options.blockDomains]
  * @returns {boolean}
  */
 function isOnBlockList(host, options) {
-  const blockDomains = _.get(options, 'blockDomains', defaultBlockDomains);
+  const blockDomains = _.get(options, 'blockDomains', getDefaultBlockDomains());
 
   if (!_.isArray(blockDomains)) {
     throw new Error('blockDomains must be Array');
@@ -37,7 +46,7 @@ function isOnBlockList(host, options) {
  * @param {*} req
  * @param {object} options
  * @param {function} [options.isProtected]
- * @param {[string]} [options.blockDomains=defaultBlockDomains]
+ * @param {[string]} [options.blockDomains]
  * @returns {boolean}
  */
 function shouldBlock(req, options) {

@@ -100,6 +100,54 @@ describe('tests', function () {
 
       expect(fn(req, options)).to.equal(true);
     });
+
+    it('returns true when has everything but domain from env', function () {
+      var req = {
+          get: _.constant('some host'),
+          cookies: {}
+        },
+        options = {
+          isProtected: function () {
+            return true;
+          }
+        };
+
+      process.env.BLOCK_DOMAINS = 'some host';
+
+      expect(fn(req, options)).to.equal(true);
+    });
+
+    it('returns true when has everything but domain from env with many items', function () {
+      var req = {
+          get: _.constant('some host'),
+          cookies: {}
+        },
+        options = {
+          isProtected: function () {
+            return true;
+          }
+        };
+
+      process.env.BLOCK_DOMAINS = 'some other host, some host, some other host';
+
+      expect(fn(req, options)).to.equal(true);
+    });
+
+    it('returns false when has everything but domain from env is not there', function () {
+      var req = {
+          get: _.constant('some host'),
+          cookies: {}
+        },
+        options = {
+          isProtected: function () {
+            return true;
+          }
+        };
+
+      process.env.BLOCK_DOMAINS = 'some other host, some _other_ host';
+
+      expect(fn(req, options)).to.equal(false);
+    });
   });
 });
 
