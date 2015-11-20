@@ -1,6 +1,6 @@
 {
   "name": "@nymdev/express-nymag-user",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Handles in-house user identification as middleware for express via a cookie",
   "main": "index.js",
   "repository": {

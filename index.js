@@ -9,7 +9,7 @@ function getDefaultBlockDomains() {
   const blockDomains = process.env.BLOCK_DOMAINS;
 
   if (_.isString(blockDomains) && blockDomains.length) {
-    return blockDomains.split(',');
+    return _.map(blockDomains.split(','), _.trim);
   } else {
     return [];
   }
