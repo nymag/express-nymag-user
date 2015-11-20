@@ -11,11 +11,11 @@ NOTE: Use with care.  It's the same as user's volunteering their own username, a
 ```js
 const express = require('express'),
   app = express(),
-  expressNYMagAuth = require('@nymdev/express-nymag-auth'),
-  authServer = 'http://auth.nymag.com:5000/login?redirect_to=';
+  expressNYMagAuth = require('@nymdev/express-nymag-user'),
+  authServer = 'http://some_auth_server/login?redirect_to=';
 
 app.use(expressNYMagAuth({
-  blockDomains: ['nymag.com'],
+  blockDomains: ['your_domain.biz'],
   redirectTo: function (originalUrl) {
     return authServer + encodeURIComponent(originalUrl);
   },
