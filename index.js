@@ -11,7 +11,7 @@ const _ = require('lodash'),
  * @returns {function}
  */
 function contains(target) {
-  return function(value) {
+  return function (value) {
     return target.indexOf(value) > -1;
   };
 }
@@ -19,7 +19,7 @@ function contains(target) {
 /**
  * @param {string} host
  * @param {object} options
- * @param {string} [options.blockDomains=defaultBlockDomains]
+ * @param {[string]} [options.blockDomains=defaultBlockDomains]
  * @returns {boolean}
  */
 function isOnBlockList(host, options) {
@@ -65,7 +65,7 @@ function getAuthServerUrl(options, originalUrl) {
 
 /**
  * Get original url made from the parts from express
- * @param req
+ * @param {*} req
  * @returns {string}
  */
 function getOriginalUrl(req) {
@@ -110,11 +110,12 @@ function eachRequest(options) {
     } else {
       next();
     }
-  }
+  };
 }
 
 /**
- * @module
+ * @param {object} options
+ * @returns {express.Router}
  */
 module.exports = function (options) {
   const router = express.Router();

@@ -82,7 +82,7 @@ describe('tests', function () {
         };
 
       expect(function () {
-        fn(req, options)
+        fn(req, options);
       }).to.throw();
     });
 
