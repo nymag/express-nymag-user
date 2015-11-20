@@ -7,20 +7,46 @@ const _ = require('lodash'),
   defaultBlockDomains = ['nymetro.com'];
 
 /**
+ * @param {string} target
+ * @returns {function}
+ */
+function contains(target) {
+  return function(value) {
+    return target.indexOf(value) > -1;
+  };
+}
+
+/**
+ * @param {string} host
+ * @param {object} options
+ * @param {string} [options.blockDomains=defaultBlockDomains]
+ * @returns {boolean}
+ */
+function isOnBlockList(host, options) {
+  const blockDomains = _.get(options, 'blockDomains', defaultBlockDomains);
+
+  if (!_.isArray(blockDomains)) {
+    throw new Error('blockDomains must be Array');
+  }
+
+  return _.any(blockDomains, contains(host));
+}
+
+/**
  * Should we block this domain?
  * @param {*} req
  * @param {object} options
+ * @param {function} [options.isProtected]
+ * @param {[string]} [options.blockDomains=defaultBlockDomains]
  * @returns {boolean}
  */
 function shouldBlock(req, options) {
   const host = req.get('host') || '',
     isProtected = _.get(options, 'isProtected'),
-    blockDomains = _.get(options, 'blockDomains', defaultBlockDomains),
     hasDefinedProtectedLogic = _.isFunction(isProtected),
-    hostIsOnBlockList = _.any(blockDomains, function (value) { return host.indexOf(value) > -1; }),
     hasCookiesEnabled = !!req.cookies;
 
-  return hasCookiesEnabled && hasDefinedProtectedLogic && hostIsOnBlockList && isProtected(req);
+  return hasCookiesEnabled && hasDefinedProtectedLogic && isOnBlockList(host, options) && isProtected(req);
 }
 
 /**
@@ -57,12 +83,10 @@ function getUser(req) {
   var user = null,
     cookies = req.cookies;
 
-  if (_.isString(cookies.user)) {
+  if (_.isString(cookies[cookieName])) {
     try {
-      user = JSON.parse(cookies.user.replace(/\\"/g, '"').replace(/\\054/g, ','));
-    } catch (ex) {
-      console.error('Invalid JSON in "user" cookie' + ex);
-    }
+      user = JSON.parse(cookies[cookieName].replace(/\\"/g, '"').replace(/\\054/g, ','));
+    } catch (ex) {} // deliberately do nothing
   }
 
   return user;
@@ -100,3 +124,6 @@ module.exports = function (options) {
 
   return router;
 };
+
+module.exports.eachRequest = eachRequest;
+module.exports.shouldBlock = shouldBlock;
