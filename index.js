@@ -5,16 +5,6 @@ const _ = require('lodash'),
   cookieParser = require('cookie-parser'),
   cookieName = 'user';
 
-function getDefaultBlockDomains() {
-  const blockDomains = process.env.BLOCK_DOMAINS;
-
-  if (_.isString(blockDomains) && blockDomains.length) {
-    return _.map(blockDomains.split(','), _.trim);
-  } else {
-    return [];
-  }
-}
-
 /**
  * @param {string} target
  * @returns {function}
@@ -26,36 +16,20 @@ function contains(target) {
 }
 
 /**
- * @param {string} host
- * @param {object} options
- * @param {[string]} [options.blockDomains]
- * @returns {boolean}
- */
-function isOnBlockList(host, options) {
-  const blockDomains = _.get(options, 'blockDomains', getDefaultBlockDomains());
-
-  if (!_.isArray(blockDomains)) {
-    throw new Error('blockDomains must be Array');
-  }
-
-  return _.any(blockDomains, contains(host));
-}
-
-/**
- * Should we block this domain?
+ * Should we block this request?
  * @param {*} req
  * @param {object} options
  * @param {function} [options.isProtected]
- * @param {[string]} [options.blockDomains]
  * @returns {boolean}
  */
 function shouldBlock(req, options) {
-  const host = req.get('host') || '',
-    isProtected = _.get(options, 'isProtected'),
+  const isProtected = _.get(options, 'isProtected'),
     hasDefinedProtectedLogic = _.isFunction(isProtected),
     hasCookiesEnabled = !!req.cookies;
 
-  return hasCookiesEnabled && hasDefinedProtectedLogic && isOnBlockList(host, options) && isProtected(req);
+  return hasCookiesEnabled && 
+    hasDefinedProtectedLogic && 
+    isProtected(req);
 }
 
 /**
