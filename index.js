@@ -73,6 +73,16 @@ function getUser(req) {
   return user;
 }
 
+function redirect(req,res, options) {
+  var authUrl = getAuthServerUrl(options, getOriginalUrl(req));
+  if (authUrl) {
+    res.redirect(authUrl);
+  } else {
+    res.status(403)
+      .send('Forbidden: Protected resource with no authentication service defined.')
+  }
+}
+
 /**
  * @param {object} options
  * @returns {Function}
@@ -84,15 +94,13 @@ function eachRequest(options) {
 
       if (user) {
         req.user = user;
-        next();
-      } else {
-        var authUrl = getAuthServerUrl(options, getOriginalUrl(req));
-        if (authUrl) {
-          res.redirect(authUrl);
+        if (shouldBlock(req,options)) {
+          redirect(req,res,options);
         } else {
-          res.status(403)
-            .send('Forbidden: Protected resource with no authentication service defined.')
+          next();
         }
+      } else {
+        redirect(req,res,options);
       }
     } else {
       next();
