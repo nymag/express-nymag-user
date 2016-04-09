@@ -94,13 +94,13 @@ function eachRequest(options) {
 
       if (user) {
         req.user = user;
-        if (shouldBlock(req,options)) {
-          redirect(req,res,options);
+        if (shouldBlock(req, options)) {
+          redirect(req, res, options);
         } else {
           next();
         }
       } else {
-        redirect(req,res,options);
+        redirect(req, res, options);
       }
     } else {
       next();
