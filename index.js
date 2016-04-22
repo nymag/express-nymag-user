@@ -50,7 +50,7 @@ function getAuthServerUrl(options, originalUrl) {
  * @returns {string}
  */
 function getOriginalUrl(req) {
-  const host = req.get('host'); // includes port on Chrome, needed for dev
+  const host = req.get('x-forwarded-host') || req.get('host'); // includes port on Chrome, needed for dev
 
   return req.protocol + '://' + host + req.originalUrl;
 }
